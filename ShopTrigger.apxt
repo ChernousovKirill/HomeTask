@@ -1,0 +1,6 @@
+trigger ShopTrigger on Shop__c (after insert, after update) {
+    if(Trigger.isUpdate){
+     DateTimeNow dtn = new DateTimeNow(); 
+     dtn.updateChildTimeToNow(Trigger.New);
+    }
+}
