@@ -1,0 +1,58 @@
+@isTest
+public class TestShopTrigger {
+
+    @isTest
+    static void shopDateCheck(){
+
+      List<Shop__c> shops = TestDateTimeNow.shop(1,null,false);
+      List<Shop__c> shp = [SELECT Id, Update_Time__c FROM Shop__c WHERE Id IN : shops];
+
+      System.assert(shp.get(0).Update_Time__c !=null);
+    }
+
+    @isTest
+    static void dateCheckForOneHundredShops() {
+
+      List<Shop__c> shops = TestDateTimeNow.shop(100,null,false);
+      List<Shop__c> shp = [SELECT Id, Update_Time__c FROM Shop__c WHERE Id IN : shops];
+  
+        for(Shop__c shop : shp){
+            System.assert(shop.Update_Time__c != null);
+    }
+
+       System.assertEquals(100,shp.size());
+}
+
+     @isTest
+     static void shopCheckTimeIfResetDateTime(){
+       
+       List<Shop__c> shops = TestDateTimeNow.shop(1,null,true);
+
+       Test.startTest();
+       update shops;
+       Test.stopTest();
+    
+       List<Shop__c> shp = [SELECT Id, Update_Time__c FROM Shop__c WHERE Id IN : shops];
+
+       System.assert(shp.get(0).Update_Time__c == null);
+
+    }
+     @isTest
+     static void checkTimeIfResetDateTimeForOneHundredShop(){
+
+     List<Shop__c> shops = TestDateTimeNow.shop(100,null,true);
+
+     Test.startTest();
+     update shops;
+     Test.stopTest();
+  
+     List<Shop__c> shp = [SELECT Id, Update_Time__c FROM Shop__c WHERE Id IN : shops];
+
+     for(Shop__c shop : shp) {
+         System.assert(shop.Update_Time__c == null);
+     }
+
+     System.assertEquals(100, shp.size());
+    
+}
+}
