@@ -1,0 +1,64 @@
+@isTest
+public class TestHouseTrigger {
+
+@isTest
+static void houseDateCheck(){
+
+  List<House__c> houses = TestDateTimeNow.houseShop(1,null,false,1);
+  List<House__c> hs = [SELECT Id, Date_Time__c FROM House__c WHERE Id IN : houses];
+
+  System.assert(hs.get(0).Date_Time__c !=null);
+    }
+
+@isTest
+static void DateCheckForOneHundredHouses() {
+
+  List<House__c> houses = TestDateTimeNow.houseShop(100,null,false,1);
+  List<House__c> hs = [SELECT Id, Date_Time__c FROM House__c WHERE Id IN : houses];
+  
+    for(House__c house : hs){
+         System.assert(house.Date_Time__c != null);
+    }
+
+    System.assertEquals(100,hs.size());
+}
+
+@isTest
+static void houseDateCheckWithoutShop(){
+
+  List<House__c> houses = TestDateTimeNow.houseShop(1,null,false,1);
+  List<Shop__c> shops = [SELECT Id, Update_Time__c FROM Shop__c WHERE Infrastructure__c IN : houses];
+
+    for(Shop__C shp : shops) {
+   shp.Update_Time__c = DateTime.now();
+       }
+
+  Test.startTest();
+  update shops;
+  Test.stopTest();
+  
+  List<House__c> hs =[SELECT Id, Date_Time__c FROM House__c WHERE Id IN : houses];
+  System.assert(hs.get(0).Date_Time__c !=null);
+    }
+
+@isTest
+static void houseCheckTimeIfResetDateTime(){
+
+  List<House__c> houses = TestDateTimeNow.houseShop(1, null, true, 0);
+  List<House__c> hs = [SELECT Id, Date_Time__c FROM House__c WHERE Id IN : houses];
+
+  System.assert(hs.get(0).Date_Time__c !=null);
+    }
+
+@isTest
+static void checkTimeIfResetDateTimeForOneHundredHouse(){
+
+  List<House__c> houses = TestDateTimeNow.houseShop(100, null, true, 0);
+  List<House__c> hs = [SELECT Id, Date_Time__c FROM House__c WHERE Id IN : houses];
+
+    for(House__c house : hs) {
+        System.assert(house.Date_Time__c == null);
+    }
+           System.assertEquals(100, hs.size());
+    }
+}
